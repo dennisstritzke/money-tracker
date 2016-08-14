@@ -1,0 +1,5 @@
+= Money Tracker API Guide
+
+== Index Endpoint
+
+include::{snippets}/index/http-request.adoc[]
