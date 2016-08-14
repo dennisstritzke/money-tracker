@@ -6,7 +6,7 @@ build:
   image: maven:3.3.3-jdk-8
   script:
     - mvn package -q
-    - ARTIFACT=$(find target/ -name "oauthprovider-*.jar" | tr -d '[[:space:]]')
+    - ARTIFACT=$(find target -name "moneytracker-*.jar" | tr -d '[[:space:]]')
     - "export sha1=$(sha1sum artifact.tar.gz | awk '{print $1}')"
     - "export md5=$(md5sum artifact.tar.gz | awk '{print $1}')"
     - ARTIFACT_NAME=${ARTIFACT#"target/"}
