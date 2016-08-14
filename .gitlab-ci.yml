@@ -10,4 +10,4 @@ build:
     - "export sha1=$(sha1sum artifact.tar.gz | awk '{print $1}')"
     - "export md5=$(md5sum artifact.tar.gz | awk '{print $1}')"
     - ARTIFACT_NAME=${ARTIFACT#"target/"}
-    - curl -f --user $ARTIFACTORY_USER:$ARTIFACTORY_PASSWORD --data-binary "@$ARTIFACT" -X PUT "https://artifactory.stritzke.me/artifactory//$ARTIFACT_NAME" -H "X-Checksum-Sha1:$sha1" -H "X-Checksum-Md5:$md5"
+    - curl -f --user $ARTIFACTORY_USER:$ARTIFACTORY_PASSWORD --data-binary "@$ARTIFACT" -X PUT "https://artifactory.stritzke.me/artifactory/money-tracker/$ARTIFACT_NAME" -H "X-Checksum-Sha1:$sha1" -H "X-Checksum-Md5:$md5"
