@@ -1,0 +1,16 @@
+stages:
+  - build
+  - artifact_deploy
+
+build:
+  stage: build
+  image: maven:3.3.3-jdk-8
+  script:
+    - mvn package
+    - ARTIFACT=$(find target/ -name "oauthprovider-*.jar" | tr -d '[[:space:]]')
+    - "export sha1=$(sha1sum artifact.tar.gz | awk '{print $1}')"
+    - "export md5=$(md5sum artifact.tar.gz | awk '{print $1}')"
+    - ARTIFACT_NAME=${ARTIFACT#"target/"}
+    - curl -f --user $ARTIFACTORY_USER:$ARTIFACTORY_PASSWORD --data-binary "@$ARTIFACT" -X PUT "https://artifactory.stritzke.me/artifactory//$ARTIFACT_NAME" -H "X-Checksum-Sha1:$sha1" -H "X-Checksum-Md5:$md5"
+  only:
+    - develop
