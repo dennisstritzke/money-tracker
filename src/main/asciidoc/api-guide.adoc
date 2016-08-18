@@ -1,5 +1,13 @@
 = Money Tracker API Guide
 
-== Index Endpoint
+== Expense Index
 
 include::{snippets}/index/http-request.adoc[]
+
+include::{snippets}/index/http-response.adoc[]
+
+== Create Expense
+
+include::{snippets}/creation/http-request.adoc[]
+
+include::{snippets}/creation/http-response.adoc[]

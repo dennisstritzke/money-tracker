@@ -19,6 +19,9 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -41,8 +44,18 @@ public class ExpenseEndpointRestDocumentation {
 
   @Test
   public void rootResourceTest() throws Exception {
-    mockMvc.perform(get("/").accept(MediaType.APPLICATION_JSON))
+    mockMvc.perform(get("/expenses").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andDo(document("index"));
+  }
+
+  @Test
+  public void postExpense() throws Exception {
+    mockMvc.perform(post("/expenses/{year}/{month}", 2016, 7).content("{\"amount\":23.4,\"comment\":\"something\"}").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andDo(document("creation", pathParameters(
+                    parameterWithName("year").description("The year the expense was made"),
+                    parameterWithName("month").description("The month of the year the expense was made in.")
+            )));
   }
 }
