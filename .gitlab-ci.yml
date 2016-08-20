@@ -1,13 +1,32 @@
 stages:
-  - build
+- build
+- deploy
 
 build:
   stage: build
   image: maven:3.3.3-jdk-8
+  artifacts:
+    expire_in: 1h
+    paths:
+    - target/*.jar
   script:
-    - mvn package -q
-    - ARTIFACT=$(find target -name "moneytracker-*.jar" | tr -d '[[:space:]]')
-    - "export sha1=$(sha1sum $ARTIFACT | awk '{print $1}')"
-    - "export md5=$(md5sum $ARTIFACT | awk '{print $1}')"
-    - ARTIFACT_NAME=${ARTIFACT#"target/"}
-    - curl -f --user $ARTIFACTORY_USER:$ARTIFACTORY_PASSWORD --data-binary "@$ARTIFACT" -X PUT "https://artifactory.stritzke.me/artifactory/money-tracker/$ARTIFACT_NAME" -H "X-Checksum-Sha1:$sha1" -H "X-Checksum-Md5:$md5"
+  - mvn package -q
+  - ARTIFACT=$(find target -name "moneytracker-*.jar" | tr -d '[[:space:]]')
+  - "export sha1=$(sha1sum $ARTIFACT | awk '{print $1}')"
+  - "export md5=$(md5sum $ARTIFACT | awk '{print $1}')"
+  - ARTIFACT_NAME=${ARTIFACT#"target/"}
+  - curl -f --user $ARTIFACTORY_USER:$ARTIFACTORY_PASSWORD --data-binary "@$ARTIFACT" -X PUT "https://artifactory.stritzke.me/artifactory/money-tracker/$ARTIFACT_NAME" -H "X-Checksum-Sha1:$sha1" -H "X-Checksum-Md5:$md5"
+
+deploy:
+  stage: deploy
+  image: ubuntu:16.04
+  dependencies:
+  - build
+  script:
+  - echo "$ID_RSA" > id_rsa
+  - chmod 0600 id_rsa
+  - ssh -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dennis@expenses.stritzke.me -p 8080 mkdir -p /opt/expenses
+  - eval $(ssh -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dennis@expenses.stritzke.me -p 8080 docker stop expeneses)
+  - eval $(ssh -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dennis@expenses.stritzke.me -p 8080 docker rm expeneses)
+  - scp -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null target/*.jar dennis@expenses.stritzke.me:/opt/expenses
+  - ssh -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dennis@expenses.stritzke.me -p 8080 docker run --env VIRTUAL_HOST=expenses.stritzke.me --env VIRTUAL_PORT=80 --expose 80 -v /opt/expenses:/expenses java:openjdk-8u102-jre java -jar /expenses/*.jar
