@@ -2,9 +2,8 @@ package me.stritzke.moneytracker.expenses;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.ResourceSupport;
-import org.springframework.hateoas.Resources;
+import org.springframework.data.rest.webmvc.RepositoryLinksResource;
+import org.springframework.hateoas.*;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +18,10 @@ import java.util.List;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/expenses")
+@RequestMapping("/api/expenses")
+@ExposesResourceFor(Expense.class)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ExpenseEndpoint {
+public class ExpenseEndpoint implements ResourceProcessor<RepositoryLinksResource> {
   private final ExpenseRepository repository;
 
   @RequestMapping(method = RequestMethod.GET)
@@ -45,7 +45,7 @@ public class ExpenseEndpoint {
   }
 
   private Link getLinkToPreviousMonthExpenses(int currentYear, int currentMonth) {
-    if(currentMonth == 1) {
+    if (currentMonth == 1) {
       return getLinkToExpenses("previous", currentYear - 1, 12);
     } else {
       return getLinkToExpenses("previous", currentYear, currentMonth - 1);
@@ -53,7 +53,7 @@ public class ExpenseEndpoint {
   }
 
   private Link getLinkToNextMonthExpenses(int currentYear, int currentMonth) {
-    if(currentMonth == 12) {
+    if (currentMonth == 12) {
       return getLinkToExpenses("next", currentYear + 1, 1);
     } else {
       return getLinkToExpenses("next", currentYear, currentMonth + 1);
@@ -95,5 +95,11 @@ public class ExpenseEndpoint {
     } else {
       return ResponseEntity.ok(expense);
     }
+  }
+
+  @Override
+  public RepositoryLinksResource process(RepositoryLinksResource resource) {
+    resource.add(ControllerLinkBuilder.linkTo(ExpenseEndpoint.class).withRel("expenses"));
+    return resource;
   }
 }
