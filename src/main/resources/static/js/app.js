@@ -1,7 +1,7 @@
 (function () {
-  var moneyTracker = angular.module("moneyTracker", []);
+  var moneyTracker = angular.module("moneyTracker");
 
-  moneyTracker.controller("MoneyTrackerController", ["$scope", "$http", function ($scope, $http) {
+  moneyTracker.controller("MoneyTrackerController", ["$scope", "$http", "ExpenseService", function ($scope, $http, ExpenseService) {
     $scope.expense = {};
 
     $scope.submit = function (expense) {
@@ -46,10 +46,17 @@
     };
 
     $scope.expenses = [];
-    getExpenses(currentDate().year, currentDate().month).then(function(result) {
-        $scope.expenses = result.data._embedded.expenses;
-    }, function() {
-        console.log("Problem loading expenses!")
+    getExpenses(currentDate().year, currentDate().month).then(function (result) {
+      $scope.expenses = result.data._embedded.expenses;
+    }, function () {
+      console.log("Problem loading expenses!")
     });
+
+    ExpenseService.listCurrent().then(function (result) {
+      console.log(result);
+    }, function(err) {
+      console.log("Something went wrong");
+      console.log(err);
+    })
   }]);
 })();
