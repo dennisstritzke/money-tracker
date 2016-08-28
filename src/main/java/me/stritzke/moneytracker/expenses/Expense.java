@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 @Data
 @Entity
-public class Expense {
+class Expense {
   @Id
   @GeneratedValue
   private long id;

@@ -7,6 +7,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import java.util.List;
 
 @RepositoryRestResource(exported = false)
-public interface ExpenseRepository extends CrudRepository<Expense, Long> {
+interface ExpenseRepository extends CrudRepository<Expense, Long> {
   List<Expense> findByYearAndMonth(@Param("year") int year, @Param("month") int month);
 }
