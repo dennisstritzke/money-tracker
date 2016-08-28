@@ -26,7 +26,7 @@ deploy:
   - echo "$ID_RSA" > id_rsa
   - chmod 0600 id_rsa
   - ssh -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dennis@expenses.stritzke.me -p 8080 mkdir -p /opt/expenses
-  - eval $(ssh -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dennis@expenses.stritzke.me -p 8080 docker stop expeneses)
-  - eval $(ssh -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dennis@expenses.stritzke.me -p 8080 docker rm expeneses)
+  - eval $(ssh -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dennis@expenses.stritzke.me -p 8080 docker stop expenses)
+  - eval $(ssh -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dennis@expenses.stritzke.me -p 8080 docker rm expenses)
   - scp -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P 8080 target/*.jar dennis@expenses.stritzke.me:/opt/expenses
-  - ssh -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dennis@expenses.stritzke.me -p 8080 docker run --name expeneses -d --env VIRTUAL_HOST=expenses.stritzke.me --env VIRTUAL_PORT=8080 --expose 8080 -v /opt/expenses:/expenses java:openjdk-8u102-jre java -jar /expenses/$(find target/ -type f -name "*.jar" -printf "%f\n")
+  - ssh -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dennis@expenses.stritzke.me -p 8080 docker run --name expenses -d --env VIRTUAL_HOST=expenses.stritzke.me --env VIRTUAL_PORT=8080 --expose 8080 -v /opt/expenses:/expenses java:openjdk-8u102-jre java -jar /expenses/$(find target/ -type f -name "*.jar" -printf "%f\n")
