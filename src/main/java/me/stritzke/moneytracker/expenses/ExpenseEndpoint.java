@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -23,6 +21,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ExpenseEndpoint implements ResourceProcessor<RepositoryLinksResource> {
   private final ExpenseRepository repository;
+  private final ExpenseService expenseService;
 
   @RequestMapping(method = RequestMethod.GET)
   public ResourceSupport getExpenseRoot() {
@@ -33,54 +32,46 @@ public class ExpenseEndpoint implements ResourceProcessor<RepositoryLinksResourc
   }
 
   private Link createCurrentLink() {
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTime(new Date());
-    int year = calendar.get(Calendar.YEAR);
-    int month = calendar.get(Calendar.MONTH);
-    return getLinkToExpenses("current", year, month);
+    return getLinkToExpenses("current", new DateWrapper());
   }
 
-  private Link getLinkToExpenses(String rel, int year, int month) {
-    return ControllerLinkBuilder.linkTo(methodOn(ExpenseEndpoint.class).getExpensesOfMonth(year, month)).withRel(rel);
+  private Link getLinkToExpenses(String rel, DateWrapper date) {
+    return ControllerLinkBuilder.linkTo(methodOn(ExpenseEndpoint.class).getExpensesOfMonth(date.getYear(), date.getMonth())).withRel(rel);
   }
 
-  private Link getLinkToPreviousMonthExpenses(int currentYear, int currentMonth) {
-    if (currentMonth == 1) {
-      return getLinkToExpenses("previous", currentYear - 1, 12);
-    } else {
-      return getLinkToExpenses("previous", currentYear, currentMonth - 1);
-    }
+  private Link getLinkToPreviousMonthExpenses(DateWrapper date) {
+    return getLinkToExpenses("previous", date.getPreviousMonth());
   }
 
-  private Link getLinkToNextMonthExpenses(int currentYear, int currentMonth) {
-    if (currentMonth == 12) {
-      return getLinkToExpenses("next", currentYear + 1, 1);
-    } else {
-      return getLinkToExpenses("next", currentYear, currentMonth + 1);
-    }
+  private Link getLinkToNextMonthExpenses(DateWrapper date) {
+    return getLinkToExpenses("next", date.getNextMonth());
+  }
+
+  @RequestMapping(method = RequestMethod.POST)
+  public ResponseEntity<?> addExpense(@RequestBody ExpenseCreationDTO expenseCreationDTO) {
+    DateWrapper date = new DateWrapper();
+    Expense expense = expenseService.storeExpense(expenseCreationDTO, date.getYear(), date.getMonth());
+    URI location = ControllerLinkBuilder.linkTo(methodOn(ExpenseEndpoint.class).getExpense(date.getYear(), date.getMonth(), expense.getId())).toUri();
+    return ResponseEntity.created(location).build();
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/{year}/{month}")
   public ResponseEntity<Resources<Expense>> getExpensesOfMonth(@PathVariable("year") Integer year, @PathVariable("month") Integer month) {
     List<Expense> byYearAndMonth = repository.findByYearAndMonth(year, month);
     Resources<Expense> expenseResource = new Resources<Expense>(byYearAndMonth);
-    expenseResource.add(getLinkToExpenses("self", year, month));
-    expenseResource.add(getLinkToPreviousMonthExpenses(year, month));
-    expenseResource.add(getLinkToNextMonthExpenses(year, month));
+    DateWrapper date = new DateWrapper(year, month);
+    expenseResource.add(getLinkToExpenses("self", date));
+    expenseResource.add(getLinkToPreviousMonthExpenses(date));
+    expenseResource.add(getLinkToNextMonthExpenses(date));
     return ResponseEntity.ok(expenseResource);
   }
 
   @RequestMapping(method = RequestMethod.POST, value = "/{year}/{month}")
   @ResponseStatus(HttpStatus.CREATED)
-  public ResponseEntity<?> addExpense(@PathVariable("year") Integer year,
-                                      @PathVariable("month") Integer month,
-                                      @RequestBody ExpenseCreationDTO expenseCreationDTO) throws URISyntaxException {
-    Expense expense = new Expense();
-    expense.setAmount(expenseCreationDTO.getAmount());
-    expense.setComment(expenseCreationDTO.getComment());
-    expense.setYear(year);
-    expense.setMonth(month);
-    expense = repository.save(expense);
+  public ResponseEntity<?> addExpenseInMonth(@PathVariable("year") Integer year,
+                                             @PathVariable("month") Integer month,
+                                             @RequestBody ExpenseCreationDTO expenseCreationDTO) throws URISyntaxException {
+    Expense expense = expenseService.storeExpense(expenseCreationDTO, year, month);
     URI location = ControllerLinkBuilder.linkTo(methodOn(ExpenseEndpoint.class).getExpense(year, month, expense.getId())).toUri();
     return ResponseEntity.created(location).build();
   }

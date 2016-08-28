@@ -52,4 +52,13 @@ public class ExpenseEndpointRestDocumentation extends AbstractEndpointDocumentat
                     responseHeaders(headerWithName("Location").description("Location of the created expense"))
             ));
   }
+
+  @Test
+  public void postExpenseAtRoot() throws Exception {
+    getMockMvc().perform(post("/api/expenses").content("{\"amount\":23.4,\"comment\":\"something\"}").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andDo(document("creation",
+                    responseHeaders(headerWithName("Location").description("Location of the created expense"))
+            ));
+  }
 }
