@@ -20,7 +20,7 @@
 </form>
 
 <h1>Current Month</h1>
-Total: {{ calculateTotal() }}
+Total: {{ calculateTotal() }} €
 <table>
   <tr>
     <th>Amount</th>
@@ -29,7 +29,7 @@ Total: {{ calculateTotal() }}
     <th>Month</th>
   </tr>
   <tr ng-repeat="expense in expenses">
-    <td>{{ expense.amount }}</td>
+    <td>{{ expense.amount }} €</td>
     <td>{{ expense.comment }}</td>
     <td>{{ expense.year }}</td>
     <td>{{ expense.month }}</td>
