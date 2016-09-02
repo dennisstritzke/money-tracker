@@ -13,7 +13,7 @@
 <body ng-controller="MoneyTrackerController as mny">
 <h1>Money Tracking</h1>
 
-<form name="newexpense" novalidate ng-submit="newexpense.$valid && submit(expense)">
+<form name="newExpense" novalidate ng-submit="newExpense.$valid && submit(expense)">
   Comment: <input type="text" ng-model="expense.comment"><br>
   Amount: <input type="number" step="0.01" ng-model="expense.amount">
   <button type="submit">Add</button>

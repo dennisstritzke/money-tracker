@@ -27,6 +27,7 @@
 
     function createExpense(expense) {
       ExpenseService.create(expense).then(function() {
+        $scope.expense = {};
         loadExpenses();
       }, function () {
         console.log("Something went wrong...");
