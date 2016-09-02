@@ -11,5 +11,12 @@
           .follow("expenses", "current")
           .getResource().result;
     };
+
+    this.create = function (expense) {
+      return myTraverson
+          .newRequest()
+          .follow("expenses", "current")
+          .post(expense).result;
+    }
   }]);
 }());
