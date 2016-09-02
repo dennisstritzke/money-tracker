@@ -74,6 +74,14 @@ class ExpenseEndpoint implements ResourceProcessor<RepositoryLinksResource> {
     }
   }
 
+  @RequestMapping(method = RequestMethod.DELETE, value = "/{year}/{month}/{expenseId}")
+  public ResponseEntity<?> deleteExpense(@PathVariable("year") Integer year,
+                                      @PathVariable("month") Integer month,
+                                      @PathVariable("expenseId") Long expenseId) {
+    expenseService.delete(expenseId);
+    return ResponseEntity.noContent().build();
+  }
+
   @Override
   public RepositoryLinksResource process(RepositoryLinksResource resource) {
     resource.add(ControllerLinkBuilder.linkTo(ExpenseEndpoint.class).withRel("expenses"));

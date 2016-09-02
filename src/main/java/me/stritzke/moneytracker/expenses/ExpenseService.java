@@ -27,4 +27,8 @@ class ExpenseService {
   Collection<Expense> find(DateWrapper date) {
     return repository.findByYearAndMonth(date.getYear(), date.getMonth());
   }
+
+  void delete(Long expenseId) {
+    repository.delete(expenseId);
+  }
 }
