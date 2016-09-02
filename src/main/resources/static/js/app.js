@@ -14,8 +14,17 @@
       return total;
     };
 
+    $scope.deleteExpense = function (expense) {
+      ExpenseService.deleteExpense(expense).then(function() {
+        loadExpenses();
+      }, function (err) {
+        console.log("Something bad happened", err);
+      })
+    };
+
     function loadExpenses() {
       ExpenseService.listCurrent().then(function (expenseResource) {
+        $scope.expenses = [];
         if(expenseResource._embedded !== undefined) {
           $scope.expenses = expenseResource._embedded.expenses;
         }

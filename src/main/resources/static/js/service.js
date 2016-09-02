@@ -1,7 +1,7 @@
 (function () {
   var moneyTracker = angular.module("moneyTracker");
 
-  moneyTracker.service("ExpenseService", ["traverson", function (traverson) {
+  moneyTracker.service("ExpenseService", ["traverson", "$http", function (traverson, $http) {
     traverson.registerMediaType(TraversonJsonHalAdapter.mediaType, TraversonJsonHalAdapter);
     var myTraverson = traverson.from("http://localhost:8080/api").jsonHal().useAngularHttp();
 
@@ -17,6 +17,13 @@
           .newRequest()
           .follow("expenses", "current")
           .post(expense).result;
+    };
+
+    this.deleteExpense = function (expense) {
+      return $http({
+        method: "DELETE",
+        url: expense._links.self.href
+      });
     }
   }]);
 }());

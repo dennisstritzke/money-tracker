@@ -13,6 +13,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
@@ -37,19 +38,26 @@ class ExpenseEndpoint implements ResourceProcessor<RepositoryLinksResource> {
   public ResponseEntity<?> addExpense(@RequestBody ExpenseCreationDTO expenseCreationDTO) {
     DateWrapper date = new DateWrapper();
     Expense expense = expenseService.save(expenseCreationDTO, date.getYear(), date.getMonth());
-    URI location = ControllerLinkBuilder.linkTo(methodOn(ExpenseEndpoint.class).getExpense(date.getYear(), date.getMonth(), expense.getId())).toUri();
+    URI location = ControllerLinkBuilder.linkTo(methodOn(ExpenseEndpoint.class).getExpense(date.getYear(), date.getMonth(), expense.getNumericId())).toUri();
     return ResponseEntity.created(location).build();
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/{year}/{month}")
   public ResponseEntity<Resources<Expense>> getExpensesOfMonth(@PathVariable("year") Integer year, @PathVariable("month") Integer month) {
     Collection<Expense> byYearAndMonth = expenseService.find(new DateWrapper(year, month));
-    Resources<Expense> expenseResource = new Resources<Expense>(byYearAndMonth);
+    byYearAndMonth.forEach(this::addSelfLink);
+    Resources<Expense> expenseResource = new Resources<>(byYearAndMonth);
     DateWrapper date = new DateWrapper(year, month);
     expenseResource.add(getLinkToExpenses("self", date));
     expenseResource.add(getLinkToExpenses("previous", date.getPreviousMonth()));
     expenseResource.add(getLinkToExpenses("next", date.getNextMonth()));
     return ResponseEntity.ok(expenseResource);
+  }
+
+  private void addSelfLink(Expense expense) {
+    expense.add(linkTo(methodOn(ExpenseEndpoint.class)
+            .getExpense(expense.getYear(), expense.getMonth(), expense.getNumericId()))
+            .withSelfRel());
   }
 
   @RequestMapping(method = RequestMethod.POST, value = "/{year}/{month}")
@@ -58,7 +66,7 @@ class ExpenseEndpoint implements ResourceProcessor<RepositoryLinksResource> {
                                              @PathVariable("month") Integer month,
                                              @RequestBody ExpenseCreationDTO expenseCreationDTO) throws URISyntaxException {
     Expense expense = expenseService.save(expenseCreationDTO, year, month);
-    URI location = ControllerLinkBuilder.linkTo(methodOn(ExpenseEndpoint.class).getExpense(year, month, expense.getId())).toUri();
+    URI location = ControllerLinkBuilder.linkTo(methodOn(ExpenseEndpoint.class).getExpense(year, month, expense.getNumericId())).toUri();
     return ResponseEntity.created(location).build();
   }
 
@@ -76,8 +84,8 @@ class ExpenseEndpoint implements ResourceProcessor<RepositoryLinksResource> {
 
   @RequestMapping(method = RequestMethod.DELETE, value = "/{year}/{month}/{expenseId}")
   public ResponseEntity<?> deleteExpense(@PathVariable("year") Integer year,
-                                      @PathVariable("month") Integer month,
-                                      @PathVariable("expenseId") Long expenseId) {
+                                         @PathVariable("month") Integer month,
+                                         @PathVariable("expenseId") Long expenseId) {
     expenseService.delete(expenseId);
     return ResponseEntity.noContent().build();
   }

@@ -37,6 +37,9 @@ Total: {{ calculateTotal() | number: 2 }} €
     <td>{{ expense.comment }}</td>
     <td>{{ expense.year }}</td>
     <td>{{ expense.month }}</td>
+    <td>
+      <button ng-click="deleteExpense(expense)">Delete</button>
+    </td>
   </tr>
 </table>
 </body>
