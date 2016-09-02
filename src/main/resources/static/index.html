@@ -20,7 +20,7 @@
 </form>
 
 <h1>Current Month</h1>
-Total: {{ calculateTotal() }} €
+Total: {{ calculateTotal() | number: 2 }} €
 <table>
   <tr>
     <th>Amount</th>
