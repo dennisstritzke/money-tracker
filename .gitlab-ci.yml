@@ -23,6 +23,7 @@ deploy:
   dependencies:
   - build
   script:
+  - mkdir ~/.ssh
   - echo "$ID_RSA" > ~/.ssh/id_rsa
   - chmod 0600 ~/.ssh/id_rsa
   - echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
