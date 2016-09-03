@@ -23,10 +23,10 @@ deploy:
   dependencies:
   - build
   script:
-  - echo "$ID_RSA" > id_rsa
-  - chmod 0600 id_rsa
-  - ssh -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dennis@expenses.stritzke.me -p 8080 mkdir -p /opt/expenses
-  - eval $(ssh -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dennis@expenses.stritzke.me -p 8080 docker stop expenses)
-  - eval $(ssh -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dennis@expenses.stritzke.me -p 8080 docker rm expenses)
-  - scp -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P 8080 target/*.jar dennis@expenses.stritzke.me:/opt/expenses
-  - ssh -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dennis@expenses.stritzke.me -p 8080 docker run --name expenses -d --env VIRTUAL_HOST=expenses.stritzke.me --env VIRTUAL_PORT=8080 --expose 8080 -v /opt/expenses:/expenses java:openjdk-8u102-jre java -jar /expenses/$(find target/ -type f -name "*.jar" -printf "%f\n")
+  - echo "$ID_RSA" > ~/.ssh/id_rsa
+  - chmod 0600 ~/.ssh/id_rsa
+  - echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+  - chmod 0600 ~/.ssh/known_hosts
+  - eval "$(ssh-agent -s)"
+  - ssh-add ~/.ssh/id_rsa
+  - ansible-playbook -i hosts create.yml --extra-vars "jar=$(find target/ -type f -name "*.jar" -printf "%f\n")"
