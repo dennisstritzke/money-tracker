@@ -30,4 +30,5 @@ deploy:
   - chmod 0600 ~/.ssh/known_hosts
   - eval "$(ssh-agent -s)"
   - ssh-add ~/.ssh/id_rsa
-  - ansible-playbook -i hosts create.yml --extra-vars "jar=$(find target/ -type f -name "*.jar" -printf "%f\n")"
+  - cd deployment
+  - ansible-playbook -i hosts create.yml --extra-vars "jar=$(find ../target/ -type f -name "*.jar" -printf "%f\n")"
