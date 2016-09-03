@@ -31,4 +31,5 @@ deploy:
   - eval "$(ssh-agent -s)"
   - ssh-add ~/.ssh/id_rsa
   - cd deployment
-  - ansible-playbook -i hosts create.yml --extra-vars "jar=$(find ../target/ -type f -name "*.jar" -printf "%f\n")"
+  - ssh dennis@expenses.stritzke.me -p 8080 echo "bla"
+  - ansible-playbook -i hosts create.yml --extra-vars "jar=$(find ../target/ -type f -name "*.jar" -printf "%f\n")" -vvvv
