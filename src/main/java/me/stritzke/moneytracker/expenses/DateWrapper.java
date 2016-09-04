@@ -16,7 +16,7 @@ class DateWrapper {
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(new Date());
     this.year = calendar.get(Calendar.YEAR);
-    this.month = calendar.get(Calendar.MONTH);
+    this.month = calendar.get(Calendar.MONTH) + 1;
   }
 
   DateWrapper getPreviousMonth() {
@@ -25,7 +25,6 @@ class DateWrapper {
     } else {
       return new DateWrapper(getYear(), getMonth() - 1);
     }
-
   }
 
   DateWrapper getNextMonth() {
