@@ -31,6 +31,4 @@ deploy:
   - eval "$(ssh-agent -s)"
   - ssh-add ~/.ssh/id_rsa
   - cd deployment
-  - ssh -v -o UserKnownHostsFile=/root/.ssh/known_hosts dennis@hds.webhop.net -p 8080 echo "bla"
-  - cat /root/.ssh/known_hosts
-  - ansible-playbook -i hosts create.yml --extra-vars "jar=../target/$(find ../target/ -type f -name "*.jar" -printf "%f\n")" -vvvv
+  - ansible-playbook -i hosts create.yml --extra-vars "jar=../target/$(find ../target/ -type f -name "*.jar" -printf "%f\n")"
