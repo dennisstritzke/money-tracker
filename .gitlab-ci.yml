@@ -26,10 +26,11 @@ deploy:
   - mkdir ~/.ssh
   - echo "$ID_RSA" > ~/.ssh/id_rsa
   - chmod 0600 ~/.ssh/id_rsa
-  - echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
-  - chmod 0600 ~/.ssh/known_hosts
+#  - echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+#  - chmod 0600 ~/.ssh/known_hosts
   - eval "$(ssh-agent -s)"
   - ssh-add ~/.ssh/id_rsa
   - cd deployment
-  - ssh -v -o UserKnownHostsFile=/root/.ssh/known_hosts dennis@hds.webhop.net -p 8080 echo "bla"
+  - ssh -v -o StrictHostKeyChecking=no -o UserKnownHostsFile=/root/.ssh/known_hosts dennis@hds.webhop.net -p 8080 echo "bla"
+  - echo /root/.ssh/known_hosts
   - ansible-playbook -i hosts create.yml --extra-vars "jar=$(find ../target/ -type f -name "*.jar" -printf "%f\n")" -vvvv
