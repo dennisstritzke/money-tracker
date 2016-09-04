@@ -5,6 +5,13 @@
     traverson.registerMediaType(TraversonJsonHalAdapter.mediaType, TraversonJsonHalAdapter);
     var myTraverson = traverson.from("/api").jsonHal().useAngularHttp();
 
+    this.list = function(url) {
+      return $http({
+        method: "GET",
+        url: url
+      });
+    };
+
     this.listCurrent = function () {
       return myTraverson
           .newRequest()
