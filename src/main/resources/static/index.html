@@ -25,7 +25,7 @@
   <button type="submit">Add</button>
 </form>
 
-<h1>Current Month <small>{{ selectedMonthName() }}</small></h1>
+<h1>{{ selectedMonthName() }}</h1>
 <button ng-click="changeMonth(expenses._links.previous.href)">&lt; previous</button>
 <button ng-click="changeMonth(expenses._links.next.href)">next &gt;</button>
 <p>Total: {{ calculateTotal() | number: 2 }} €</p>
@@ -33,14 +33,11 @@
   <tr>
     <th>Amount</th>
     <th>Comment</th>
-    <th>Year</th>
-    <th>Month</th>
+    <th></th>
   </tr>
   <tr ng-repeat="expense in expenses._embedded.expenses">
     <td>{{ expense.amount }} €</td>
     <td>{{ expense.comment }}</td>
-    <td>{{ expense.year }}</td>
-    <td>{{ expense.month }}</td>
     <td>
       <button ng-click="deleteExpense(expense)">Delete</button>
     </td>
