@@ -18,6 +18,8 @@ public class RootEndpointDocumentation extends AbstractEndpointDocumentation {
             .andDo(document("root", links(halLinks(),
                     linkWithRel("expenses").description("Expenses resource"),
                     linkWithRel("doc").description("API documentation"),
+                    linkWithRel("backup").description("Backup"),
+                    linkWithRel("restore").description("Restore a previously created backup"),
                     linkWithRel("profile").ignored()
             )));
   }

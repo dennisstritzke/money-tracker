@@ -78,12 +78,4 @@ public class ExpenseEndpointRestDocumentation extends AbstractEndpointDocumentat
     getMockMvc().perform(delete(location))
             .andExpect(status().isNoContent());
   }
-
-  private String createExpense(Integer year, Integer month) throws Exception {
-    final String[] location = new String[1];
-    getMockMvc().perform(post("/api/expenses/{year}/{month}", year, month).content("{\"amount\":23.4,\"comment\":\"something\"}").contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated())
-            .andDo(result -> location[0] = result.getResponse().getHeader("Location"));
-    return location[0];
-  }
 }

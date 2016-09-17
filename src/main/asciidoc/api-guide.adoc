@@ -11,3 +11,11 @@ include::{snippets}/index/http-response.adoc[]
 include::{snippets}/creation/http-request.adoc[]
 
 include::{snippets}/creation/http-response.adoc[]
+
+== Backup & Restore
+Trigger a backup.
+
+Restore from previous backup - happy path
+
+If data is already existing -> Conflict
+                            -> Set request param to ignore

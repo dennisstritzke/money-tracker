@@ -5,10 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-class ExpenseService {
+public class ExpenseService {
   private final ExpenseRepository repository;
 
   Expense save(ExpenseCreationDTO expenseCreationDTO, Integer year, Integer month) {
@@ -30,5 +31,12 @@ class ExpenseService {
 
   void delete(Long expenseId) {
     repository.delete(expenseId);
+  }
+
+  public Collection<Expense> findAll() {
+    Iterable<Expense> expenseIterator = repository.findAll();
+    Collection<Expense> expenses = new LinkedList<>();
+    expenseIterator.forEach(expenses::add);
+    return expenses;
   }
 }

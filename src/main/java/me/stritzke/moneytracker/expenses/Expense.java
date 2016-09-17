@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @Data
 @Entity
-class Expense extends ResourceSupport {
+public class Expense extends ResourceSupport {
   @Id
   @GeneratedValue
   private long numericId;
