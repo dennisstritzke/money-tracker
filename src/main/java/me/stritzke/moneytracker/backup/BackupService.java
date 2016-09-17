@@ -19,4 +19,10 @@ class BackupService {
             .collect(Collectors.toList());
     return new Backup(expenseBackupDTOs);
   }
+
+  void restore(Backup backup) {
+    backup.getExpenses().forEach(expense -> {
+      expenseService.save(expense.getAmount(), expense.getComment(), expense.getYear(), expense.getMonth());
+    });
+  }
 }

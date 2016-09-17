@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -12,10 +13,10 @@ import java.util.LinkedList;
 public class ExpenseService {
   private final ExpenseRepository repository;
 
-  Expense save(ExpenseCreationDTO expenseCreationDTO, Integer year, Integer month) {
+  public Expense save(BigDecimal amount, String comment, Integer year, Integer month) {
     Expense expense = new Expense();
-    expense.setAmount(expenseCreationDTO.getAmount());
-    expense.setComment(expenseCreationDTO.getComment());
+    expense.setAmount(amount);
+    expense.setComment(comment);
     expense.setYear(year);
     expense.setMonth(month);
     return repository.save(expense);

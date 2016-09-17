@@ -37,7 +37,7 @@ class ExpenseEndpoint implements ResourceProcessor<RepositoryLinksResource> {
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity<?> addExpense(@RequestBody ExpenseCreationDTO expenseCreationDTO) {
     DateWrapper date = new DateWrapper();
-    Expense expense = expenseService.save(expenseCreationDTO, date.getYear(), date.getMonth());
+    Expense expense = expenseService.save(expenseCreationDTO.getAmount(), expenseCreationDTO.getComment(), date.getYear(), date.getMonth());
     URI location = ControllerLinkBuilder.linkTo(methodOn(ExpenseEndpoint.class).getExpense(date.getYear(), date.getMonth(), expense.getNumericId())).toUri();
     return ResponseEntity.created(location).build();
   }
@@ -65,7 +65,7 @@ class ExpenseEndpoint implements ResourceProcessor<RepositoryLinksResource> {
   public ResponseEntity<?> addExpenseInMonth(@PathVariable("year") Integer year,
                                              @PathVariable("month") Integer month,
                                              @RequestBody ExpenseCreationDTO expenseCreationDTO) throws URISyntaxException {
-    Expense expense = expenseService.save(expenseCreationDTO, year, month);
+    Expense expense = expenseService.save(expenseCreationDTO.getAmount(), expenseCreationDTO.getComment(), year, month);
     URI location = ControllerLinkBuilder.linkTo(methodOn(ExpenseEndpoint.class).getExpense(year, month, expense.getNumericId())).toUri();
     return ResponseEntity.created(location).build();
   }

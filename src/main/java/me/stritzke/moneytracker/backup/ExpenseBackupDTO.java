@@ -1,11 +1,13 @@
 package me.stritzke.moneytracker.backup;
 
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import me.stritzke.moneytracker.expenses.Expense;
 
 import java.math.BigDecimal;
 
-@Getter
+@Data
+@NoArgsConstructor
 class ExpenseBackupDTO {
   ExpenseBackupDTO(Expense expense) {
     this.amount = expense.getAmount();

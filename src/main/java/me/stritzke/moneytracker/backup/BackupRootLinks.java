@@ -12,7 +12,7 @@ class BackupRootLinks implements ResourceProcessor<RepositoryLinksResource> {
   @Override
   public RepositoryLinksResource process(RepositoryLinksResource resource) {
     resource.add(linkTo(methodOn(BackupEndpoint.class).doBackup()).withRel("backup"));
-    resource.add(linkTo(methodOn(BackupEndpoint.class).doRestore()).withRel("restore"));
+    resource.add(linkTo(methodOn(BackupEndpoint.class).doRestore(null)).withRel("restore"));
     return resource;
   }
 }

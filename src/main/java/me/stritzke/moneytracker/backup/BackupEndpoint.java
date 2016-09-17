@@ -3,6 +3,7 @@ package me.stritzke.moneytracker.backup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,8 @@ class BackupEndpoint {
   }
 
   @RequestMapping(method = RequestMethod.POST, value = "restore")
-  public ResponseEntity<?> doRestore() {
+  public ResponseEntity<?> doRestore(@RequestBody Backup backup) {
+    backupService.restore(backup);
     return ResponseEntity.notFound().build();
   }
 }
