@@ -24,11 +24,13 @@
     };
 
     $scope.deleteExpense = function (expense) {
-      ExpenseService.deleteExpense(expense).then(function () {
-        loadExpenses();
-      }, function (err) {
-        console.log("Something bad happened", err);
-      })
+      if(confirm("Realy delete expense '" + expense.comment + "'?")) {
+        ExpenseService.deleteExpense(expense).then(function () {
+          loadExpenses();
+        }, function (err) {
+          console.log("Something bad happened", err);
+        });
+      }
     };
 
     $scope.changeMonth = function (link) {
