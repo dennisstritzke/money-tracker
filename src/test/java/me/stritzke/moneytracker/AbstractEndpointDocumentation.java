@@ -1,6 +1,7 @@
 package me.stritzke.moneytracker;
 
 import lombok.Getter;
+import me.stritzke.moneytracker.expenses.ExpenseService;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
@@ -26,15 +27,25 @@ public abstract class AbstractEndpointDocumentation {
   public RestDocumentation restDocumentation = new RestDocumentation("target/generated-snippets");
   @Autowired
   private WebApplicationContext context;
+  @Autowired
+  private ExpenseService expenseService;
 
   @Getter
   private MockMvc mockMvc;
 
   @Before
   public void setUp() {
+    expenseService.findAll().forEach(expense -> {
+      expenseService.delete(expense.getNumericId());
+    });
+
     this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
             .apply(documentationConfiguration(this.restDocumentation))
             .build();
+  }
+
+  protected String createExpense() throws Exception {
+    return createExpense(0, 0);
   }
 
   protected String createExpense(Integer year, Integer month) throws Exception {

@@ -30,7 +30,7 @@ public class ExpenseService {
     return repository.findByYearAndMonth(date.getYear(), date.getMonth());
   }
 
-  void delete(Long expenseId) {
+  public void delete(Long expenseId) {
     repository.delete(expenseId);
   }
 

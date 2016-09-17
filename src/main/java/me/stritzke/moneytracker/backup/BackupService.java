@@ -20,9 +20,18 @@ class BackupService {
     return new Backup(expenseBackupDTOs);
   }
 
-  void restore(Backup backup) {
+  void restore(Backup backup, boolean ignoreDataExistence) throws DataExistingWarning {
+    if (applicationContainsData() && !ignoreDataExistence) {
+      throw new DataExistingWarning();
+    }
+
     backup.getExpenses().forEach(expense -> {
       expenseService.save(expense.getAmount(), expense.getComment(), expense.getYear(), expense.getMonth());
     });
+
+  }
+
+  private boolean applicationContainsData() {
+    return expenseService.findAll().size() > 0;
   }
 }
