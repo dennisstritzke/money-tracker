@@ -1,21 +1,111 @@
 = Money Tracker API Guide
 
-== Expense Index
+The Money Tracker API is implemented as a true RESTful HTTP API, so hypermedia is a thing here!
 
-include::{snippets}/index/http-request.adoc[]
+== API Root
 
-include::{snippets}/index/http-response.adoc[]
+include::{snippets}/root/http-request.adoc[]
 
-== Create Expense
+=== Response
 
-include::{snippets}/creation/http-request.adoc[]
+include::{snippets}/root/http-response.adoc[]
 
-include::{snippets}/creation/http-response.adoc[]
+=== Links
+
+include::{snippets}/root/links.adoc[]
+
+== Expenses
+
+An expense is a single purchase, which is spent in a particular month.
+
+=== Index
+
+include::{snippets}/expenses/index/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/expenses/index/http-response.adoc[]
+
+==== Links
+
+include::{snippets}/expenses/index/links.adoc[]
+
+=== List Expenses
+
+include::{snippets}/expenses/get/http-request.adoc[]
+
+include::{snippets}/expenses/get/path-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/expenses/get/http-response.adoc[]
+
+include::{snippets}/expenses/get/response-fields.adoc[]
+
+include::{snippets}/expenses/get/links.adoc[]
+
+=== Create an Expense
+
+An expense can be created at the expense root, which will add the expense to the current month.
+
+include::{snippets}/expenses/creation_atRoot/http-request.adoc[]
+
+==== Response
+
+Looking at the Location header you are able to see that the expense was created in the month and year, in which this version of the software was released.
+
+include::{snippets}/expenses/creation_atRoot/http-response.adoc[]
+
+==== Response Headers
+
+include::{snippets}/expenses/creation_atRoot/response-headers.adoc[]
+
+=== Create an Expense in a specific Month
+
+An expense can also be created in a specific month.
+
+include::{snippets}/expenses/creation/http-request.adoc[]
+
+include::{snippets}/expenses/creation/path-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/expenses/creation/http-response.adoc[]
+
+==== Response Headers
+
+include::{snippets}/expenses/creation/response-headers.adoc[]
 
 == Backup & Restore
-Trigger a backup.
 
-Restore from previous backup - happy path
+Backup und restore operations can be triggered through the API. While backups can be created whenever you want, there are some preconditions, which need to be met, if you want to restore application data.
 
-If data is already existing -> Conflict
-                            -> Set request param to ignore
+=== Create a Backup
+
+include::{snippets}/backup/create/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/backup/create/http-response.adoc[]
+
+include::{snippets}/backup/create/response-fields.adoc[]
+
+=== Restore a Backup
+
+If the applications contains no data, a backup can be restored directly through the restore endpoint.
+
+include::{snippets}/backup/restore/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/backup/restore/http-response.adoc[]
+
+If the application already contains expenses, the API response is as follows, with the same request as above.
+
+include::{snippets}/backup/restore_dataExisting/http-response.adoc[]
+
+If you want to ignore the warning, you can use query parameters as follows to do so. The response will be just like above.
+
+include::{snippets}/backup/restore_force/http-request.adoc[]
+
+include::{snippets}/backup/restore_force/request-parameters.adoc[]

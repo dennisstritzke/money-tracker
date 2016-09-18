@@ -19,6 +19,8 @@ public class BackupEndpointDocumentation extends AbstractEndpointDocumentation {
 
   @Test
   public void createBackup() throws Exception {
+    createExpense(2016, 9);
+
     getMockMvc().perform(get("/api/backup").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andDo(document("backup/create", responseFields(

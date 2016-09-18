@@ -14,13 +14,13 @@ public class RootEndpointDocumentation extends AbstractEndpointDocumentation {
   @Test
   public void rootResource() throws Exception {
     getMockMvc().perform(get("/api").accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andDo(document("root", links(halLinks(),
-                    linkWithRel("expenses").description("Expenses resource"),
-                    linkWithRel("doc").description("API documentation"),
-                    linkWithRel("backup").description("Backup"),
-                    linkWithRel("restore").description("Restore a previously created backup"),
-                    linkWithRel("profile").ignored()
-            )));
+        .andExpect(status().isOk())
+        .andDo(document("root", links(halLinks(),
+            linkWithRel("doc").description("API documentation"),
+            linkWithRel("expenses").description("Expenses resource"),
+            linkWithRel("backup").description("Create a backup of all data stored the application"),
+            linkWithRel("restore").description("Restore a previously created backup"),
+            linkWithRel("profile").ignored()
+        )));
   }
 }
