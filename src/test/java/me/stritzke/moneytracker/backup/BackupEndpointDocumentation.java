@@ -21,7 +21,7 @@ public class BackupEndpointDocumentation extends AbstractEndpointDocumentation {
   public void createBackup() throws Exception {
     getMockMvc().perform(get("/api/backup").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andDo(document("createBackup", responseFields(
+            .andDo(document("backup/create", responseFields(
                     fieldWithPath("version")
                             .type(JsonFieldType.NUMBER)
                             .description("Schema version"),
@@ -35,7 +35,7 @@ public class BackupEndpointDocumentation extends AbstractEndpointDocumentation {
   public void restoreBackup() throws Exception {
     getMockMvc().perform(post("/api/restore").content(EXAMPLE_BACKUP).contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andDo(document("restoreBackup"));
+            .andDo(document("backup/restore"));
   }
 
   @Test
@@ -44,7 +44,7 @@ public class BackupEndpointDocumentation extends AbstractEndpointDocumentation {
 
     getMockMvc().perform(post("/api/restore").content(EXAMPLE_BACKUP).contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isConflict())
-            .andDo(document("restoreBackup_dataExisting"));
+            .andDo(document("backup/restore_dataExisting"));
   }
 
   @Test
@@ -53,7 +53,7 @@ public class BackupEndpointDocumentation extends AbstractEndpointDocumentation {
 
     getMockMvc().perform(post("/api/restore?force=true").content(EXAMPLE_BACKUP).contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andDo(document("restoreBackup_force", requestParameters(
+            .andDo(document("backup/restore_force", requestParameters(
                     parameterWithName("force").description("Set to 'true', if the restore should be performed although the application is not empty.")
             )));
   }

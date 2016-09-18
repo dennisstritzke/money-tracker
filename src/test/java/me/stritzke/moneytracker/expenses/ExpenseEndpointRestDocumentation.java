@@ -28,7 +28,7 @@ public class ExpenseEndpointRestDocumentation extends AbstractEndpointDocumentat
   public void expensesRoot() throws Exception {
     getMockMvc().perform(get("/api/expenses").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andDo(document("index", links(halLinks(),
+            .andDo(document("expenses/index", links(halLinks(),
                     linkWithRel("current").description("Expenses of the current month")
             )));
   }
@@ -40,7 +40,7 @@ public class ExpenseEndpointRestDocumentation extends AbstractEndpointDocumentat
 
     getMockMvc().perform(get("/api/expenses/{year}/{month}", 2099, 1).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andDo(document("getExpenses", PATH_PARAMETER_YEAR_AND_MONTH, responseFields(
+            .andDo(document("expenses/get", PATH_PARAMETER_YEAR_AND_MONTH, responseFields(
                     fieldWithPath("_embedded.expenses[]._links.self")
                             .type(JsonFieldType.OBJECT)
                             .description("Link that identifies the expense"),
@@ -57,7 +57,7 @@ public class ExpenseEndpointRestDocumentation extends AbstractEndpointDocumentat
   public void postExpense() throws Exception {
     getMockMvc().perform(post("/api/expenses/{year}/{month}", 2016, 7).content("{\"amount\":23.4,\"comment\":\"something\"}").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
-            .andDo(document("creation", PATH_PARAMETER_YEAR_AND_MONTH,
+            .andDo(document("expenses/creation", PATH_PARAMETER_YEAR_AND_MONTH,
                     responseHeaders(headerWithName("Location").description("Location of the created expense"))
             ));
   }
@@ -66,7 +66,7 @@ public class ExpenseEndpointRestDocumentation extends AbstractEndpointDocumentat
   public void postExpenseAtRoot() throws Exception {
     getMockMvc().perform(post("/api/expenses").content("{\"amount\":23.4,\"comment\":\"something\"}").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
-            .andDo(document("creation",
+            .andDo(document("expenses/creation_atRoot",
                     responseHeaders(headerWithName("Location").description("Location of the created expense"))
             ));
   }

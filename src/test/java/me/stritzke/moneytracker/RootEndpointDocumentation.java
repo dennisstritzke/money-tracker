@@ -23,13 +23,4 @@ public class RootEndpointDocumentation extends AbstractEndpointDocumentation {
                     linkWithRel("profile").ignored()
             )));
   }
-
-  @Test
-  public void expensesRoot() throws Exception {
-    getMockMvc().perform(get("/api/expenses").accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andDo(document("index", links(halLinks(),
-                    linkWithRel("current").description("Expenses of the current month")
-            )));
-  }
 }
