@@ -63,3 +63,35 @@ th {
 tr:nth-child(even) {
   background-color: #dddddd;
 }
+
+.clear {
+  clear: both;
+}
+
+#monthTitle, .navigationButton {
+  display: inline-block;
+}
+
+#monthTitle {
+  width: 70%;
+}
+
+.navigationButton {
+  font-size: 1em;
+  vertical-align: middle;
+  padding-top: 0;
+  padding-bottom: 0;
+  width: 14.5%;
+  margin-top: -10px;
+}
+
+@media screen and (max-width: 375px) {
+  .navigationButton {
+    width: 13.5%;
+    margin-top: -6px;
+  }
+
+  #monthTitle {
+    font-size: 1.5em;
+  }
+}

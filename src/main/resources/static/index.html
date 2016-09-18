@@ -25,9 +25,12 @@
   <button type="submit">Add</button>
 </form>
 
-<h1>{{ selectedMonthName() }}</h1>
-<!--<button ng-click="changeMonth(expenses._links.previous.href)">&lt; previous</button>-->
-<!--<button ng-click="changeMonth(expenses._links.next.href)">next &gt;</button>-->
+<div class="clear">
+  <button class="navigationButton" ng-click="changeMonth(expenses._links.previous.href)">&lt;</button>
+  <h1 id="monthTitle">{{ selectedMonthName() }}</h1>
+  <button class="navigationButton" ng-click="changeMonth(expenses._links.next.href)">&gt;</button>
+</div>
+
 <p>Total: {{ calculateTotal() | number: 2 }} €</p>
 <table>
   <tr>
