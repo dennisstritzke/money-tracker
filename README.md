@@ -10,3 +10,6 @@ Visit `http://localhost:8080/docs/api-guide.html` to view the documentation.
 mvn package
 java -jar target/*.jar
 ```
+
+## Known Vulnerability Scan
+Within the pom.xml the OWASP dependency check is added. To execute the dependency scan, execute `mvn dependency-check:aggregate`.
