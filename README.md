@@ -11,5 +11,12 @@ mvn package
 java -jar target/*.jar
 ```
 
+## Run with Docker
+```
+docker run -p 8080:8080 --name moneytracker -d dstritzke/money-tracker:latest
+```
+
+Visit [http://localhost:8080](http://localhost:8080).
+
 ## Known Vulnerability Scan
 Within the pom.xml the OWASP dependency check is added. To execute the dependency scan, execute `mvn dependency-check:aggregate`.
