@@ -11,4 +11,4 @@ EXPOSE 8080
 
 USER 1000300
 
-CMD ["/usr/bin/java", "-jar", "/app/target/moneytracker-0.1-SNAPSHOT.jar", "-Xmx128m"]
+CMD ["/usr/bin/java", "-jar", "/app/target/moneytracker-0.1-SNAPSHOT.jar", "-Xmx128m", "-Djava.security.egd=file:/dev/./urandom"]
