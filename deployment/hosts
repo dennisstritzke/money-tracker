@@ -1,2 +1,0 @@
-[server]
-hds.webhop.net ansible_ssh_port=8080 ansible_ssh_user=dennis

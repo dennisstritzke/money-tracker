@@ -1,0 +1,21 @@
+version: '2.0'
+services:
+  moneytracker:
+    image: "dstritzke/money-tracker:1.0.1"
+    environment:
+    - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/moneytracker
+    - SPRING_DATASOURCE_USERNAME=moneytracker
+    - SPRING_DATASOURCE_PASSWORD=money
+    - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+    - "8080:8080"
+    depends_on:
+    - postgres
+  postgres:
+    image: "postgres:9.6.5-alpine"
+    environment:
+    - POSTGRES_PASSWORD=money
+    - POSTGRES_USER=moneytracker
+    - POSTGRES_DB=moneytracker
+    volumes:
+    - "/var/lib/postgresql/data"

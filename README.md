@@ -5,15 +5,15 @@ Visit `http://localhost:8080` to use the application.
 
 Visit `http://localhost:8080/docs/api-guide.html` to view the documentation.
 
-## Build [![Build Status](https://travis-ci.org/dennisstritzke/money-tracker.svg?branch=master)](https://travis-ci.org/dennisstritzke/money-tracker)
+## Build and Run Locally [![Build Status](https://travis-ci.org/dennisstritzke/money-tracker.svg?branch=master)](https://travis-ci.org/dennisstritzke/money-tracker)
 ```
 mvn package
 java -jar target/*.jar
 ```
 
-## Run with Docker
+## Run in Docker
 ```
-docker run -p 8080:8080 --name moneytracker -d dstritzke/money-tracker:latest
+docker-compose up -d
 ```
 
 Visit [http://localhost:8080](http://localhost:8080).
