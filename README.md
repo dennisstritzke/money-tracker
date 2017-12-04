@@ -21,7 +21,7 @@ Visit [http://localhost:8080](http://localhost:8080).
 ## Run in OpenShift
 ```
 oc new-app --template=postgresql-persistent -p=POSTGRESQL_DATABASE=moneytracker
-oc new-app dstritzke/money-tracker:1.0.1
+oc new-app dstritzke/money-tracker:1.0.2
 oc patch dc money-tracker -p '{
   "spec": {
     "template": {
@@ -38,7 +38,7 @@ oc patch dc money-tracker -p '{
           },
           "readinessProbe": {
             "httpGet": {
-              "path": "/api",
+              "path": "/health",
               "port": 8080,
               "scheme": "HTTP"
             }
