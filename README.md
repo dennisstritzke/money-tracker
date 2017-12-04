@@ -36,6 +36,13 @@ oc patch dc money-tracker -p '{
               "memory": "256Mi"
             }
           },
+          "readinessProbe": {
+            "httpGet": {
+              "path": "/api",
+              "port": 8080,
+              "scheme": "HTTP"
+            }
+          },
           "env": [{
               "name":"SPRING_DATASOURCE_URL",
               "value":"jdbc:postgresql://postgresql:5432/moneytracker"
