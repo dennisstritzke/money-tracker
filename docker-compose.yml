@@ -1,7 +1,7 @@
-version: '2.0'
+version: "3.8"
 services:
   moneytracker:
-    image: "dstritzke/money-tracker:1.0.1"
+    image: dstritzke/money-tracker:latest
     environment:
     - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/moneytracker
     - SPRING_DATASOURCE_USERNAME=moneytracker
@@ -12,7 +12,7 @@ services:
     depends_on:
     - postgres
   postgres:
-    image: "postgres:9.6.5-alpine"
+    image: postgres:14.5-alpine
     environment:
     - POSTGRES_PASSWORD=money
     - POSTGRES_USER=moneytracker
