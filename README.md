@@ -5,7 +5,7 @@ Visit `http://localhost:8080` to use the application.
 
 Visit `http://localhost:8080/docs/api-guide.html` to view the documentation.
 
-## Build and Run Locally [![Build Status](https://travis-ci.org/dennisstritzke/money-tracker.svg?branch=master)](https://travis-ci.org/dennisstritzke/money-tracker)
+## Build and Run Locally
 ```
 mvn package
 java -jar target/*.jar
