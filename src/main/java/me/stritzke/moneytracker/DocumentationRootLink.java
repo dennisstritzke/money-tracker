@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class DocumentationRootLink implements RepresentationModelProcessor<RepositoryLinksResource> {
   @Override
   public RepositoryLinksResource process(RepositoryLinksResource resource) {
-    resource.add(new Link("/doc/api-guide.html").withRel("doc"));
+    resource.add(Link.of("/doc/api-guide.html").withRel("doc"));
     return resource;
   }
 }
