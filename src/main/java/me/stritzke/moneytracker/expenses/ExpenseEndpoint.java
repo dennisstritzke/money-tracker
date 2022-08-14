@@ -3,10 +3,12 @@ package me.stritzke.moneytracker.expenses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryLinksResource;
-import org.springframework.hateoas.*;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.ExposesResourceFor;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
-import org.springframework.hateoas.server.mvc.ControllerLinkBuilder;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,14 +36,14 @@ class ExpenseEndpoint implements RepresentationModelProcessor<RepositoryLinksRes
   }
 
   private Link getLinkToExpenses(String rel, DateWrapper date) {
-    return ControllerLinkBuilder.linkTo(methodOn(ExpenseEndpoint.class).getExpensesOfMonth(date.getYear(), date.getMonth())).withRel(rel);
+    return WebMvcLinkBuilder.linkTo(methodOn(ExpenseEndpoint.class).getExpensesOfMonth(date.getYear(), date.getMonth())).withRel(rel);
   }
 
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity<?> addExpense(@RequestBody ExpenseCreationDTO expenseCreationDTO) {
     DateWrapper date = new DateWrapper();
     Expense expense = expenseService.save(expenseCreationDTO.getAmount(), expenseCreationDTO.getComment(), date.getYear(), date.getMonth());
-    URI location = ControllerLinkBuilder.linkTo(methodOn(ExpenseEndpoint.class).getExpense(date.getYear(), date.getMonth(), expense.getNumericId())).toUri();
+    URI location = WebMvcLinkBuilder.linkTo(methodOn(ExpenseEndpoint.class).getExpense(date.getYear(), date.getMonth(), expense.getNumericId())).toUri();
     return ResponseEntity.created(location).build();
   }
 
@@ -49,7 +51,7 @@ class ExpenseEndpoint implements RepresentationModelProcessor<RepositoryLinksRes
   public ResponseEntity<CollectionModel<Expense>> getExpensesOfMonth(@PathVariable("year") Integer year, @PathVariable("month") Integer month) {
     Collection<Expense> byYearAndMonth = expenseService.find(new DateWrapper(year, month));
     byYearAndMonth.forEach(this::addSelfLink);
-    CollectionModel<Expense> expenseResource = new CollectionModel<>(byYearAndMonth);
+    CollectionModel<Expense> expenseResource = CollectionModel.of(byYearAndMonth);
     DateWrapper date = new DateWrapper(year, month);
     expenseResource.add(getLinkToExpenses("self", date));
     expenseResource.add(getLinkToExpenses("previous", date.getPreviousMonth()));
@@ -59,8 +61,8 @@ class ExpenseEndpoint implements RepresentationModelProcessor<RepositoryLinksRes
 
   private void addSelfLink(Expense expense) {
     expense.add(linkTo(methodOn(ExpenseEndpoint.class)
-            .getExpense(expense.getYear(), expense.getMonth(), expense.getNumericId()))
-            .withSelfRel());
+        .getExpense(expense.getYear(), expense.getMonth(), expense.getNumericId()))
+        .withSelfRel());
   }
 
   @RequestMapping(method = RequestMethod.POST, value = "/{year}/{month}")
@@ -69,7 +71,7 @@ class ExpenseEndpoint implements RepresentationModelProcessor<RepositoryLinksRes
                                              @PathVariable("month") Integer month,
                                              @RequestBody ExpenseCreationDTO expenseCreationDTO) throws URISyntaxException {
     Expense expense = expenseService.save(expenseCreationDTO.getAmount(), expenseCreationDTO.getComment(), year, month);
-    URI location = ControllerLinkBuilder.linkTo(methodOn(ExpenseEndpoint.class).getExpense(year, month, expense.getNumericId())).toUri();
+    URI location = WebMvcLinkBuilder.linkTo(methodOn(ExpenseEndpoint.class).getExpense(year, month, expense.getNumericId())).toUri();
     return ResponseEntity.created(location).build();
   }
 
@@ -95,7 +97,7 @@ class ExpenseEndpoint implements RepresentationModelProcessor<RepositoryLinksRes
 
   @Override
   public RepositoryLinksResource process(RepositoryLinksResource resource) {
-    resource.add(ControllerLinkBuilder.linkTo(ExpenseEndpoint.class).withRel("expenses"));
+    resource.add(WebMvcLinkBuilder.linkTo(ExpenseEndpoint.class).withRel("expenses"));
     return resource;
   }
 }
