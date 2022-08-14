@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryLinksResource;
 import org.springframework.hateoas.*;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.hateoas.server.ExposesResourceFor;
+import org.springframework.hateoas.server.RepresentationModelProcessor;
+import org.springframework.hateoas.server.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,19 +16,19 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Optional;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/expenses")
 @ExposesResourceFor(Expense.class)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-class ExpenseEndpoint implements ResourceProcessor<RepositoryLinksResource> {
+class ExpenseEndpoint implements RepresentationModelProcessor<RepositoryLinksResource> {
   private final ExpenseService expenseService;
 
   @RequestMapping(method = RequestMethod.GET)
-  public ResourceSupport getExpenseRoot() {
-    ResourceSupport expenseIndex = new ResourceSupport();
+  public RepresentationModel<Expense> getExpenseRoot() {
+    RepresentationModel<Expense> expenseIndex = new RepresentationModel<>();
     expenseIndex.add(getLinkToExpenses("current", new DateWrapper()));
     return expenseIndex;
   }
@@ -44,10 +46,10 @@ class ExpenseEndpoint implements ResourceProcessor<RepositoryLinksResource> {
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/{year}/{month}")
-  public ResponseEntity<Resources<Expense>> getExpensesOfMonth(@PathVariable("year") Integer year, @PathVariable("month") Integer month) {
+  public ResponseEntity<CollectionModel<Expense>> getExpensesOfMonth(@PathVariable("year") Integer year, @PathVariable("month") Integer month) {
     Collection<Expense> byYearAndMonth = expenseService.find(new DateWrapper(year, month));
     byYearAndMonth.forEach(this::addSelfLink);
-    Resources<Expense> expenseResource = new Resources<>(byYearAndMonth);
+    CollectionModel<Expense> expenseResource = new CollectionModel<>(byYearAndMonth);
     DateWrapper date = new DateWrapper(year, month);
     expenseResource.add(getLinkToExpenses("self", date));
     expenseResource.add(getLinkToExpenses("previous", date.getPreviousMonth()));
