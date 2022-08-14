@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.Optional;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -74,11 +75,11 @@ class ExpenseEndpoint implements ResourceProcessor<RepositoryLinksResource> {
   public ResponseEntity<?> getExpense(@PathVariable("year") Integer year,
                                       @PathVariable("month") Integer month,
                                       @PathVariable("expenseId") Long expenseId) {
-    Expense expense = expenseService.findOne(expenseId);
-    if (expense == null) {
-      return ResponseEntity.notFound().build();
-    } else {
+    Optional<Expense> expense = expenseService.findOne(expenseId);
+    if (expense.isPresent()) {
       return ResponseEntity.ok(expense);
+    } else {
+      return ResponseEntity.notFound().build();
     }
   }
 
