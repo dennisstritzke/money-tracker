@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentation;
+import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 public abstract class AbstractEndpointDocumentation {
   @Rule
-  public RestDocumentation restDocumentation = new RestDocumentation("target/generated-snippets");
+  public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("target/generated-snippets");
   @Autowired
   private WebApplicationContext context;
   @Autowired

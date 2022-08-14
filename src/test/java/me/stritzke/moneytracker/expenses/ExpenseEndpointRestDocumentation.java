@@ -12,8 +12,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.responseH
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -41,14 +40,14 @@ public class ExpenseEndpointRestDocumentation extends AbstractEndpointDocumentat
     getMockMvc().perform(get("/api/expenses/{year}/{month}", 2016, 9).accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andDo(document("expenses/get", PATH_PARAMETER_YEAR_AND_MONTH, responseFields(
-            fieldWithPath("_embedded.expenses[]._links.self")
-                .type(JsonFieldType.OBJECT)
-                .description("Link that identifies each expense"),
-            fieldWithPath("_embedded.expenses[]")
-                .type(JsonFieldType.ARRAY)
-                .description("Array, which contains the expenses of the requested month"),
-            fieldWithPath("_links").ignored(),
-            fieldWithPath("_embedded").ignored()),
+                fieldWithPath("_embedded.expenses[]._links.self")
+                    .type(JsonFieldType.OBJECT)
+                    .description("Link that identifies each expense"),
+                subsectionWithPath("_embedded.expenses[]")
+                    .type(JsonFieldType.ARRAY)
+                    .description("Array, which contains the expenses of the requested month"),
+                subsectionWithPath("_links").ignored()
+            ),
             links(halLinks(),
                 linkWithRel("self").description("Expenses of the requested month"),
                 linkWithRel("previous").description("Navigate to the expenses of the previous month"),
