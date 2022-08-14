@@ -1,7 +1,7 @@
 package me.stritzke.moneytracker.expenses;
 
 import lombok.Data;
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @Data
 @Entity
-public class Expense extends ResourceSupport {
+public class Expense extends RepresentationModel<Expense> {
   @Id
   @GeneratedValue
   private long numericId;
